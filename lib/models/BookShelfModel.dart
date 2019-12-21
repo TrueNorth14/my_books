@@ -8,19 +8,35 @@ class BookShelfModel extends Iterable<BookModel> {
     @override
     Iterator<BookModel> get iterator => new _BookShelfIterator(_books);
 
-    void addBook(BookModel book) => _books.add(book);
-
-    BookModel removeBook(int isbn) {
+    /// Method to find book using isbn
+    BookModel findBook(int isbn) {
         for (BookModel book in _books) {
-            if (book.isbn == isbn) {
-                _books.remove(book);
-                break;
-            }
+            if (book.isbn == isbn) return book;
         }
+        return null;
     }
 
+    /// Method to add book to list
+    void addBook(BookModel book) => _books.add(book);
 
+    /// Method to remove book from list
+    void removeBook(int isbn) {
+        _books.remove(findBook(isbn));
+    }
 
+    /* 
+       * Dummy method for sorting the books by author.
+    */
+    void sortByAuthor() {
+        // TODO: IMPLEMENT
+    }
+
+    /* 
+       * Dummy method for sorting the books by title.
+    */
+    void sortByTitle() {
+        // TODO: IMPLEMENT
+    }
 
 }
 
