@@ -92,10 +92,4 @@ class BookModel {
            "Title: $title\n"+
            "Author: $author\n";
   }
-
-}
-
-void main() {
-  var x = new BookModel(13, "a", "a", 1, 1, 1, "a", "a", "a");
-  print(x.toString());
 }
