@@ -67,6 +67,18 @@ class BookModel {
   @override
   int get hashCode => isbn.hashCode;
 
+  Map<String, dynamic> toMap() {
+    var map = <String, dynamic> {
+      'isbn': isbn,
+      'title': title,
+      'author': author,
+      'coverURL': coverURL,
+      'description': description,
+      'publisher': publisher,
+    };
+    return map;
+  }
+
   @override
   String toString() {
     return "ISBN: $isbn\n"+
