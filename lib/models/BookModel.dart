@@ -1,4 +1,41 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+
 class BookModel {
+/*
+   *  Asynchronous static method that takes in an isbn and
+   *  queries googles book api. Returns corresponding BookModel.
+   */
+  static Future<BookModel> getNewBookFromISBN(int isbn) async {
+    // TODO: Catch http get exceptions
+    String url = 'https://www.googleapis.com/books/v1/volumes?q=isbn:'+isbn.toString();
+    Map<String, String> requestHeaders = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json'
+    };
+    var response = await http.get(url, headers: requestHeaders);
+
+    //parse json reponse into dart objects
+    var jsonData = jsonDecode(response.body);
+    //remove unwanted items from jsonData and only get first from list
+    jsonData = jsonData["items"][0]["volumeInfo"];
+
+    //seperate date string into month, day, and year variables
+    //date format is YYYY-MM-DD
+    List<String> date = jsonData["publishedDate"].split('-');
+
+    return BookModel(isbn,
+                     jsonData["title"], 
+                     jsonData["authors"].join(','),
+                     int.parse(date[0]), // published month
+                     int.parse(date[1]), // published day
+                     int.parse(date[2]), // published year
+                     jsonData["imageLinks"]["thumbnail"], //coverURL
+                     jsonData["description"],
+                     jsonData["publisher"]);
+  }
+
   /// Instance fields that may be entered by user manually
   int isbn;
   String title;
@@ -9,7 +46,6 @@ class BookModel {
 
   /// Instance fields that gets fetched automatically
   String coverURL;
-  //String genre; genre not available from api
   String description;
   String publisher;
 
@@ -38,34 +74,6 @@ class BookModel {
     this._publishedYear,
   );
 
-  /// Named constructor for initiating with ISBN number
-  BookModel.withISBN(this.isbn) {
-    initializeWithISBN();
-  }
-
-  /* 
-       * Dummy method for initializing instance variables with ISBN.
-       * To implement this, get data(online) about book using ISBN (preferrably
-         another class/method) then simply initialize the instance fields.
-       * This method gets called in the withISBN() named constructor.
-    */
-  dynamic initializeWithISBN() {
-    // TODO: Implement this method
-  }
-
-    Map<String,dynamic> get map {
-    return {
-      "isbn": this.isbn,
-      "title": this.title,
-      "author": this.author,
-      "publishedMonth": this._publishedMonth,
-      "publishedYear": this._publishedYear,
-      "coverURL": this.coverURL,
-      "description": this.description,
-      "publisher": this.publisher
-    };
-  }
-
   /// Equality operator. Two books are equal if ISBN is the same.
   @override
   bool operator ==(other) {
@@ -84,4 +92,10 @@ class BookModel {
     return super.toString();
   }
 
+}
+
+void main() async {
+  var x = await BookModel.getNewBookFromISBN(9780134689555);
+  print(x.publicationDate);
+  print(x.title);
 }
