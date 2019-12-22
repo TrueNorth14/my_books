@@ -48,6 +48,15 @@ class BookModel {
       this.description,
       this.publisher);
 
+  /// Constructor from map
+  BookModel.fromMap(Map<String, dynamic> map) {
+    isbn = map["isbn"];
+    title = map["title"];
+    author = map["author"];
+    coverURL = map["coverURL"];
+    description = map["description"];
+    publisher = map["publisher"];
+  }
   /// Constructor for manually entering in values
   BookModel.fromUserInput(
     this.isbn,
