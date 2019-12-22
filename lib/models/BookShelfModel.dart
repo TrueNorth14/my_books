@@ -25,18 +25,12 @@ class BookShelfModel extends Iterable<BookModel> {
     _books.remove(findBook(isbn));
   }
 
-  /* 
-       * Dummy method for sorting the books by author.
-    */
   void sortByAuthor() {
-    // TODO: IMPLEMENT
+    _books.sort((a,b) => a.author.compareTo(b.author));
   }
 
-  /* 
-       * Dummy method for sorting the books by title.
-    */
   void sortByTitle() {
-    // TODO: IMPLEMENT
+    _books.sort((a,b) => a.title.compareTo(b.title));
   }
 }
 
