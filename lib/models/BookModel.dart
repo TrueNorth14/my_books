@@ -88,14 +88,14 @@ class BookModel {
 
   @override
   String toString() {
-    // TODO: implement toString
-    return super.toString();
+    return "ISBN: $isbn\n"+
+           "Title: $title\n"+
+           "Author: $author\n";
   }
 
 }
 
-void main() async {
-  var x = await BookModel.getNewBookFromISBN(9780134689555);
-  print(x.publicationDate);
-  print(x.title);
+void main() {
+  var x = new BookModel(13, "a", "a", 1, 1, 1, "a", "a", "a");
+  print(x.toString());
 }
