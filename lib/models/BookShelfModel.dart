@@ -7,6 +7,8 @@ class BookShelfModel extends Iterable<BookModel> {
   @override
   Iterator<BookModel> get iterator => new _BookShelfIterator(_books);
 
+  List<BookModel> get books => _books;
+
   /// Method to find book using isbn
   BookModel findBook(int isbn) {
     for (BookModel book in _books) {
