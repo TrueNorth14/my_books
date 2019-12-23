@@ -9,6 +9,7 @@ class BookModel {
    */
   static Future<BookModel> getNewBookFromISBN(int isbn) async {
     // TODO: Catch http get exceptions
+    // TODO: Handle cases for when isbn isn't valid
     String url = 'https://www.googleapis.com/books/v1/volumes?q=isbn:'+isbn.toString();
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
