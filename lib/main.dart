@@ -1,9 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:my_books/models/BookModel.dart';
 import 'package:my_books/models/BookShelfModel.dart';
-import 'package:my_books/database/BookModelProvider.dart';
 
 void main() => runApp(MyApp());
 
@@ -36,7 +33,6 @@ class _MyBooksPageState extends State<MyBooksPage> {
 
     BookShelfModel bookShelf = new BookShelfModel();
     BookModel tempBook;
-    print("called");
     List<int> isbns = [
       9781451648539, //
       9781603094221, //
@@ -55,21 +51,13 @@ class _MyBooksPageState extends State<MyBooksPage> {
     /// Call this first just in case
     bookShelf.retrieveStoredBooks();
 
-    //bookShelf.addBook(isbns.map((isbn) => getBookModel(isbn)));
     for (int isbn in isbns) {
-      tempBook = await BookModel.getBookModel(isbn);
+      tempBook = await BookModel.getNewBookFromISBN(isbn);
       bookShelf.addBook(tempBook);
     }
-    tempBook = bookShelf.findBook(9781451648539);
-    bookShelf.removeBook(tempBook);
 
-    //bookShelf.books.map((book) => print(book.map));
     myBookShelf = bookShelf;
     return bookShelf;
-
-    //myBookShelf = new BookShelfModel();
-    //myBookShelf.retrieveStoredBooks();
-    //return myBookShelf;
   }
 
   _asyncMethod() async {
@@ -264,99 +252,3 @@ class BookDetails extends StatelessWidget {
   }
 }
 
-/*
-class BookList extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return _BookListState();
-  }
-}
-
-class _BookListState extends State<BookList> {
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return null;
-  }
-}
-*/
-
-/*
-   *  Asynchronous function that takes in an isbn string and
-   *  queries googles book api. Returns a BookModel.
-   * 
-   *  Google Books API documentation: https://developers.google.com/books/docs/v1/using
-   *  
-   */
-// Future<BookModel> getBookModel(String isbn) async {
-//   //TODO: Catch http get exceptions
-
-//   String url = 'https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn;
-//   Map<String, String> requestHeaders = {
-//     'Content-type': 'application/json',
-//     'Accept': 'application/json'
-//   };
-
-//   BookModel myBook;
-//   String title;
-//   String author;
-//   int publishedMonth;
-//   int publishedDay;
-//   int publishedYear;
-//   String coverURL;
-//   String description;
-//   String publisher;
-
-//   var response = await http.get(url, headers: requestHeaders);
-
-//   //parse json reponse into dart objects
-//   var jsonData = jsonDecode(response.body);
-
-//   //remove unwanted items from jsonData and only get first from list
-//   jsonData = jsonData["items"][0]["volumeInfo"];
-
-//   title = jsonData["title"];
-//   author =
-//       jsonData["authors"].join(', '); //join all authors (seperate by comma)
-
-//   //seperate date string into month, day, and year variables
-//   //date format is YYYY-MM-DD
-//   List<String> date = jsonData["publishedDate"].split('-');
-
-//   /*
-//   publishedYear = int.parse(date[0]);
-//   publishedMonth = int.parse(date[1]);
-//   try {
-//     publishedDay = int.parse(date[2]);
-//   } catch (Exception) {
-//     publishedDay = 5;
-//   }
-//   */
-
-//   //The date stuff is annoying, no month day or year default to negative values
-//   try {
-//     publishedYear = int.parse(date[0]);
-//     publishedMonth = int.parse(date[1]);
-//     publishedDay = int.parse(date[2]);
-//   } catch (Exception) {
-//     publishedYear ??= -2000;
-//     publishedMonth ??= -5;
-//     publishedDay ??= -14;
-//   }
-
-//   //get cover image url from json
-//   coverURL = jsonData["imageLinks"]["thumbnail"];
-
-//   //description
-//   description = jsonData["description"];
-
-//   //publisher
-//   publisher = jsonData["publisher"];
-
-//   myBook = BookModel(int.parse(isbn), title, author, publishedMonth,
-//       publishedDay, publishedYear, coverURL, description, publisher);
-
-//   //print(myBook.map);
-//   return myBook;
-// }
