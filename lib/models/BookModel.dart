@@ -7,106 +7,62 @@ class BookModel {
    *  Asynchronous static method that takes in an isbn and
    *  queries googles book api. Returns corresponding BookModel.
    */
-  static Future<BookModel> getBookModel(int isbn) async {
-    //TODO: Catch http get exceptions
-
+  static Future<BookModel> getNewBookFromISBN(int isbn) async {
+    // TODO: Catch http get exceptions
+    // TODO: Handle cases for when isbn isn't valid
     String url = 'https://www.googleapis.com/books/v1/volumes?q=isbn:'+isbn.toString();
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
       'Accept': 'application/json'
     };
-
-    BookModel myBook;
-    String title;
-    String author;
-    int publishedMonth;
-    int publishedDay;
-    int publishedYear;
-    String coverURL;
-    String description;
-    String publisher;
-
     var response = await http.get(url, headers: requestHeaders);
 
     //parse json reponse into dart objects
     var jsonData = jsonDecode(response.body);
-
     //remove unwanted items from jsonData and only get first from list
     jsonData = jsonData["items"][0]["volumeInfo"];
 
-    title = jsonData["title"];
-    author =
-        jsonData["authors"].join(', '); //join all authors (seperate by comma)
-
     //seperate date string into month, day, and year variables
     //date format is YYYY-MM-DD
-    List<String> date = jsonData["publishedDate"].split('-');
-
-    /*
-  publishedYear = int.parse(date[0]);
-  publishedMonth = int.parse(date[1]);
-  try {
-    publishedDay = int.parse(date[2]);
-  } catch (Exception) {
-    publishedDay = 5;
-  }
-  */
-
-    //The date stuff is annoying, no month day or year default to negative values
+    List<String> date;
     try {
-      publishedYear = int.parse(date[0]);
-      publishedMonth = int.parse(date[1]);
-      publishedDay = int.parse(date[2]);
+      date = jsonData["publishedDate"].split('-');
     } catch (Exception) {
-      publishedYear ??= -2000;
-      publishedMonth ??= -5;
-      publishedDay ??= -14;
+      date = null;  
     }
 
-    //get cover image url from json
-    coverURL = jsonData["imageLinks"]["thumbnail"];
-
-    //description
-    description = jsonData["description"];
-
-    //publisher
-    publisher = jsonData["publisher"];
-
-    myBook = BookModel(isbn, title, author, publishedMonth,
-        publishedDay, publishedYear, coverURL, description, publisher);
-
-    print(myBook.toMap());
-    return myBook;
+    return BookModel(isbn,
+                     jsonData["title"], 
+                     jsonData["authors"].join(','),
+                     ((date!=null) ? int.parse(date[0]) : -2000),
+                     ((date!=null) ? int.parse(date[1]) : -5),
+                     ((date!=null) ? int.parse(date[2]) : -14),
+                     jsonData["imageLinks"]["thumbnail"], //coverURL
+                     jsonData["description"],
+                     jsonData["publisher"]);
   }
 
   /// Instance fields that may be entered by user manually
   int isbn;
-  String title;
-  String author;
 
   /// Instance fields that gets fetched automatically
+  String title;
+  String author;
+  int publishedYear;
+  int publishedMonth;
+  int publishedDay;
   String coverURL;
   String description;
   String publisher;
-
-  int publishedMonth, publishedDay, publishedYear;
 
   /// Default constructor for all values
   BookModel(
       this.isbn,
       this.title,
       this.author,
+      this.publishedYear,
       this.publishedMonth,
       this.publishedDay,
-      this.publishedYear,
-      this.coverURL,
-      this.description,
-      this.publisher);
-
-  BookModel.withNoDate(
-      this.isbn,
-      this.title,
-      this.author,
       this.coverURL,
       this.description,
       this.publisher);
@@ -116,11 +72,13 @@ class BookModel {
     isbn = map["isbn"];
     title = map["title"];
     author = map["author"];
+    publishedYear = map["published_year"];
+    publishedMonth = map["published_month"];
+    publishedDay = map["published_day"];
     coverURL = map["coverURL"];
     description = map["description"];
     publisher = map["publisher"];
   }
-
   /// Constructor for manually entering in values
   BookModel.fromUserInput(
     this.isbn,
@@ -141,10 +99,13 @@ class BookModel {
   int get hashCode => isbn.hashCode;
 
   Map<String, dynamic> toMap() {
-    var map = <String, dynamic>{
+    var map = <String, dynamic> {
       'isbn': isbn,
       'title': title,
       'author': author,
+      'publication_year': publishedYear,
+      'publication_month': publishedMonth,
+      'publication_day': publishedDay,
       'coverURL': coverURL,
       'description': description,
       'publisher': publisher,
