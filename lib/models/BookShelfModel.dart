@@ -29,7 +29,12 @@ class BookShelfModel extends Iterable<BookModel> {
   }
 
   /// Method to add book to list
-  void addBook(BookModel book) => _books.add(book);
+  void addBook(BookModel book) {
+    _books.add(book);
+    bookModelProvider.open();
+    bookModelProvider.insert(book);
+    bookModelProvider.close();
+  } 
 
   /// Method to remove book from list
   void removeBook(int isbn) {
