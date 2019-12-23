@@ -14,7 +14,6 @@ class BookShelfModel extends Iterable<BookModel> {
 
   /// Calls the database and fills up the books list
   dynamic retrieveStoredBooks() async {
-      bookModelProvider = new BookModelProvider();
       await bookModelProvider.open();
       _books = await bookModelProvider.retrieveBookModels();
       await bookModelProvider.close();

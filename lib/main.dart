@@ -37,26 +37,31 @@ class _MyBooksPageState extends State<MyBooksPage> {
     BookShelfModel bookShelf = new BookShelfModel();
     BookModel tempBook;
     print("called");
-    List<String> isbns = [
-      "9781451648539", //
-      "9781603094221", //
-      "9781936561698", //
-      "9781603093828", //
-      "9781603094283", //
-      "9781603094542", //
-      "9781603091008", //
-      "9780985875138", //
-      "9788320429800", //
-      "9780743212342",
-      "9780134689555",
+    List<int> isbns = [
+      9781451648539, //
+      9781603094221, //
+      9781936561698, //
+      9781603093828, //
+      9781603094283, //
+      9781603094542, //
+      9781603091008, //
+      9780985875138, //
+      9788320429800, //
+      9780743212342,
+      9780134689555,
       //"9781644850497"
     ];
 
+    /// Call this first just in case
+    bookShelf.retrieveStoredBooks();
+
     //bookShelf.addBook(isbns.map((isbn) => getBookModel(isbn)));
-    for (String isbn in isbns) {
+    for (int isbn in isbns) {
       tempBook = await BookModel.getBookModel(isbn);
       bookShelf.addBook(tempBook);
     }
+    tempBook = bookShelf.findBook(9781451648539);
+    bookShelf.removeBook(tempBook);
 
     //bookShelf.books.map((book) => print(book.map));
     myBookShelf = bookShelf;

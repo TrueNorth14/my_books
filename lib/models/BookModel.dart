@@ -7,10 +7,10 @@ class BookModel {
    *  Asynchronous static method that takes in an isbn and
    *  queries googles book api. Returns corresponding BookModel.
    */
-  static Future<BookModel> getBookModel(String isbn) async {
+  static Future<BookModel> getBookModel(int isbn) async {
     //TODO: Catch http get exceptions
 
-    String url = 'https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn;
+    String url = 'https://www.googleapis.com/books/v1/volumes?q=isbn:'+isbn.toString();
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
       'Accept': 'application/json'
@@ -72,7 +72,7 @@ class BookModel {
     //publisher
     publisher = jsonData["publisher"];
 
-    myBook = BookModel(int.parse(isbn), title, author, publishedMonth,
+    myBook = BookModel(isbn, title, author, publishedMonth,
         publishedDay, publishedYear, coverURL, description, publisher);
 
     print(myBook.toMap());
