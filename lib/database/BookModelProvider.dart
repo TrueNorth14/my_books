@@ -18,6 +18,7 @@ class BookModelProvider {
               onCreate: (Database db, int version) async {
                 await db.execute(
                   "CREATE TABLE books (isbn INTEGER PRIMARY KEY, title TEXT, author TEXT," +
+                  "published_year INTEGER, published_month INTEGER, published_day INTEGER," +
                   "coverURL TEXT, description TEXT, publisher TEXT");
               });
   }
@@ -25,10 +26,13 @@ class BookModelProvider {
   Future<List<BookModel>> retrieveBookModels() async {
     final List<Map<String, dynamic>> maps = await db.query('books');
     return List.generate(maps.length, (i) {
-      return BookModel.withNoDate(
+      return BookModel(
           maps[i]["isbn"],
           maps[i]["title"],
           maps[i]["author"],
+          maps[i]["published_year"],
+          maps[i]["published_month"],
+          maps[i]["published_day"],
           maps[i]["coverURL"],
           maps[i]["description"],
           maps[i]["publisher"],
@@ -62,7 +66,8 @@ class BookModelProvider {
   Future<BookModel> getBookModel(int isbn) async {
     var database = db;
     List<Map> maps = await database.query("books",
-                columns: ["isbn","title","author","coverURL","description","publisher"],
+                columns: ["isbn", "title", "author", "published_year", "published_month",
+                          "published_day", "coverURL", "description", "publisher"],
                 where: "isbn = ?",
                 whereArgs: [isbn]);
     return (maps.length > 0) ? BookModel.fromMap(maps.first) : null; 
