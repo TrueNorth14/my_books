@@ -30,9 +30,7 @@ class BookShelfModel extends Iterable<BookModel> {
   /// Method to add book to list
   void addBook(BookModel book) async {
     _books.add(book);
-    print("added to shelf");
     await bookModelProvider.open();
-    print("opened");
     await bookModelProvider.insert(book);
     await bookModelProvider.close();
   } 
