@@ -36,9 +36,16 @@ class BookShelfModel extends Iterable<BookModel> {
     bookModelProvider.close();
   } 
 
-  /// Method to remove book from list
-  void removeBook(int isbn) {
-    _books.remove(findBook(isbn));
+  void removeBook(BookModel book) {
+      _books.remove(book);
+      bookModelProvider.open();
+      bookModelProvider.delete(book);
+      bookModelProvider.close();
+  }
+
+  /// Method to remove book from list with isbn
+  void removeBookWithISBN(int isbn) {
+    removeBook(findBook(isbn));
   }
 
   void sortByAuthor() {
