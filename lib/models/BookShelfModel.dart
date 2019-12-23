@@ -1,13 +1,24 @@
 import 'BookModel.dart';
+import 'package:my_books/database/BookModelProvider.dart';
 
 class BookShelfModel extends Iterable<BookModel> {
   /// The list that keeps track of all the books
   List<BookModel> _books = [];
 
+  BookModelProvider bookModelProvider;
+
   @override
   Iterator<BookModel> get iterator => new _BookShelfIterator(_books);
 
   List<BookModel> get books => _books;
+
+  /// Calls the database and fills up the books list
+  dynamic retrieveStoredBooks() async {
+      bookModelProvider = new BookModelProvider();
+      bookModelProvider.open();
+      _books = await bookModelProvider.retrieveBookModels();
+      bookModelProvider.close();
+  }
 
   /// Method to find book using isbn
   BookModel findBook(int isbn) {
