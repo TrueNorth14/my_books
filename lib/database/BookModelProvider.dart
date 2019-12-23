@@ -42,11 +42,11 @@ class BookModelProvider {
   }
 
 
-  Future<int> delete(int isbn) async {
+  Future<int> delete(BookModel book) async {
     var database = db;
     return await database.delete("books",
                    where: "isbn = ?",
-                   whereArgs: [isbn]);
+                   whereArgs: [book.isbn]);
   }
 
   Future<int> update(BookModel book) async {
