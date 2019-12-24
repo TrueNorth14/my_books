@@ -11,15 +11,14 @@ class BookModelProvider {
   Database db;
 
   Future open() async {
-    print("called open");
     var databasesPath = await getDatabasesPath();
     var path = join(databasesPath, "$DB_NAME");
     db = await openDatabase(path, version: 1,
               onCreate: (Database db, int version) async {
                 await db.execute(
                   "CREATE TABLE books (isbn INTEGER PRIMARY KEY, title TEXT, author TEXT," +
-                  " published_year INT, published_month INT, published_day INT," +
-                  "coverURL TEXT, description TEXT, publisher TEXT");
+                  "published_year INTEGER, published_month INTEGER, published_day INTEGER," +
+                  "coverURL TEXT, description TEXT, publisher TEXT)");
               });
   }
 

@@ -24,19 +24,23 @@ class BookModel {
 
     //seperate date string into month, day, and year variables
     //date format is YYYY-MM-DD
-    List<String> date;
+    List<String> date = jsonData["publishedDate"].split('-');
+    int year,month,day;
     try {
-      date = jsonData["publishedDate"].split('-');
+      year = int.parse(date[0]);
+      month = int.parse(date[1]);
+      day = int.parse(date[2]);
     } catch (Exception) {
-      date = null;  
+      year = -2000;
+      month = -5;
+      day = -14;
     }
-
     return BookModel(isbn,
                      jsonData["title"], 
                      jsonData["authors"].join(','),
-                     ((date!=null) ? int.parse(date[0]) : -2000),
-                     ((date!=null) ? int.parse(date[1]) : -5),
-                     ((date!=null) ? int.parse(date[2]) : -14),
+                     year,
+                     month,
+                     day,
                      jsonData["imageLinks"]["thumbnail"], //coverURL
                      jsonData["description"],
                      jsonData["publisher"]);
@@ -103,9 +107,9 @@ class BookModel {
       'isbn': isbn,
       'title': title,
       'author': author,
-      'publication_year': publishedYear,
-      'publication_month': publishedMonth,
-      'publication_day': publishedDay,
+      'published_year': publishedYear,
+      'published_month': publishedMonth,
+      'published_day': publishedDay,
       'coverURL': coverURL,
       'description': description,
       'publisher': publisher,
