@@ -28,6 +28,7 @@ class _MyBooksPageState extends State<MyBooksPage> {
   bool displayAddWidget = false;
   GlobalKey btnKey = GlobalKey();
   String currentSort = "title"; //default orientation is title
+  String isbnFromField = "";
 
   Future<BookShelfModel> _generateBookShelf() async {
     if (myBookShelf != null) {
@@ -262,19 +263,46 @@ class _MyBooksPageState extends State<MyBooksPage> {
                   Center(
                     child: Container(
                       height: 150,
-                      width: 300,
-                      color: Colors.white,
-                      //decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                      width: 350,
+                      //color: Colors.white,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white),
                       child: Center(
-                        child: TextField(
-                          onSubmitted: (String isbn) {
-                            setState(() {
-                              displayAddWidget = false;
-                            });
-                            addBookToView(int.parse(isbn));
-                          },
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(labelText: 'Enter ISBN'),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          child: TextField(
+                            onChanged: (String chars) {
+                              isbnFromField = chars;
+                              //print(isbnFromField);
+                            },
+                            textInputAction: TextInputAction.go,
+                            onSubmitted: (String isbn) {
+                              setState(() {
+                                displayAddWidget = false;
+                              });
+                              addBookToView(int.parse(isbn));
+                            },
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              suffix: GestureDetector(
+                                //iconSize: 10,
+                                //padding: EdgeInsets.all(0),
+                                child: Icon(Icons.done),
+                                onTap: () {
+                                  setState(() {
+                                    displayAddWidget = false;
+                                  });
+                                  addBookToView(int.parse(isbnFromField));
+                                },
+                              ),
+                              labelText: 'Enter ISBN (yes people still do this)',
+                              border: OutlineInputBorder(
+                                borderRadius: new BorderRadius.circular(10.0),
+                                borderSide: new BorderSide(),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
