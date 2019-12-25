@@ -14,9 +14,12 @@ class BookShelfModel extends Iterable<BookModel> {
 
   /// Calls the database and fills up the books list
   dynamic retrieveStoredBooks() async {
-      await bookModelProvider.open();
-      _books = await bookModelProvider.retrieveBookModels();
-      await bookModelProvider.close();
+    print("open call");
+    await bookModelProvider.open();
+    print("opened");
+    _books = await bookModelProvider.retrieveBookModels();
+    print("retrieved");
+    await bookModelProvider.close();
   }
 
   /// Method to find book using isbn
@@ -33,26 +36,32 @@ class BookShelfModel extends Iterable<BookModel> {
     await bookModelProvider.open();
     await bookModelProvider.insert(book);
     await bookModelProvider.close();
-  } 
+  }
 
-  void removeBook(BookModel book) {
-      _books.remove(book);
-      bookModelProvider.open();
-      bookModelProvider.delete(book);
-      bookModelProvider.close();
+  void addBookWithIsbn(int isbn) async{
+    BookModel temp;
+    temp = await BookModel.getNewBookFromISBN(isbn);
+    await addBook(temp);
+  }
+
+  Future<void> removeBook(BookModel book) async {
+    _books.remove(book);
+    await bookModelProvider.open();
+    await bookModelProvider.delete(book);
+    await bookModelProvider.close();
   }
 
   /// Method to remove book from list with isbn
-  void removeBookWithISBN(int isbn) {
-    removeBook(findBook(isbn));
+  Future<void> removeBookWithISBN(int isbn) async{
+    await removeBook(findBook(isbn));
   }
 
   void sortByAuthor() {
-    _books.sort((a,b) => a.author.compareTo(b.author));
+    _books.sort((a, b) => a.author.compareTo(b.author));
   }
 
   void sortByTitle() {
-    _books.sort((a,b) => a.title.compareTo(b.title));
+    _books.sort((a, b) => a.title.compareTo(b.title));
   }
 }
 

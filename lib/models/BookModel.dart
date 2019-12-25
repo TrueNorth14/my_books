@@ -10,7 +10,8 @@ class BookModel {
   static Future<BookModel> getNewBookFromISBN(int isbn) async {
     // TODO: Catch http get exceptions
     // TODO: Handle cases for when isbn isn't valid
-    String url = 'https://www.googleapis.com/books/v1/volumes?q=isbn:'+isbn.toString();
+    String url =
+        'https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn.toString();
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
       'Accept': 'application/json'
@@ -25,7 +26,7 @@ class BookModel {
     //seperate date string into month, day, and year variables
     //date format is YYYY-MM-DD
     List<String> date = jsonData["publishedDate"].split('-');
-    int year,month,day;
+    int year, month, day;
     try {
       year = int.parse(date[0]);
       month = int.parse(date[1]);
@@ -35,15 +36,16 @@ class BookModel {
       month = -5;
       day = -14;
     }
-    return BookModel(isbn,
-                     jsonData["title"], 
-                     jsonData["authors"].join(','),
-                     year,
-                     month,
-                     day,
-                     jsonData["imageLinks"]["thumbnail"], //coverURL
-                     jsonData["description"],
-                     jsonData["publisher"]);
+    return BookModel(
+        isbn,
+        jsonData["title"],
+        jsonData["authors"].join(','),
+        year,
+        month,
+        day,
+        jsonData["imageLinks"]["thumbnail"], //coverURL
+        jsonData["description"],
+        jsonData["publisher"]);
   }
 
   /// Instance fields that may be entered by user manually
@@ -83,6 +85,7 @@ class BookModel {
     description = map["description"];
     publisher = map["publisher"];
   }
+
   /// Constructor for manually entering in values
   BookModel.fromUserInput(
     this.isbn,
@@ -103,7 +106,7 @@ class BookModel {
   int get hashCode => isbn.hashCode;
 
   Map<String, dynamic> toMap() {
-    var map = <String, dynamic> {
+    var map = <String, dynamic>{
       'isbn': isbn,
       'title': title,
       'author': author,
