@@ -8,7 +8,7 @@ MyBooks Application - Manage all the books that you own in an efficient way!
  - View Collection
  - Sort books
 
- ![Home Page](Home.png) { height:50%; width:50% }
+ ![Home Page](Home.png)
  ![Home Page with sort](HomeSort.png)
  ![Home Page with no books](NoBooks.png)
 
